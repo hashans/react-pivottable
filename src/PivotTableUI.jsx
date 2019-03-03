@@ -5,6 +5,9 @@ import {PivotData, sortAs, getSort} from './Utilities';
 import PivotTable from './PivotTable';
 import Sortable from 'react-sortablejs';
 import Draggable from 'react-draggable';
+import Collapsible from 'react-collapsible';
+import ReactTooltip from 'react-tooltip';
+import SearchFilterUI from "./SearchFilterView";
 
 /* eslint-disable react/prop-types */
 // eslint can't see inherited propTypes!
@@ -63,6 +66,7 @@ export class DraggableAttribute extends React.Component {
           </a>
           <span className="pvtDragHandle">☰</span>
           <h4>{this.props.name}</h4>
+
 
           {showMenu || <p>(too many values to show)</p>}
 
@@ -146,7 +150,11 @@ export class DraggableAttribute extends React.Component {
         : '';
     return (
       <li data-id={this.props.name}>
-        <span className={'pvtAttr ' + filtered}>
+        <span
+          className={'pvtAttr ' + filtered}
+          onClick={this.toggleFilterBox.bind(this)}
+          data-tip={this.props.name}
+        >
           {this.props.name}
           <span
             className="pvtTriangle"
@@ -156,7 +164,7 @@ export class DraggableAttribute extends React.Component {
             ▾
           </span>
         </span>
-
+        <ReactTooltip place="top" type="dark" effect="solid"/>
         {this.state.open ? this.getFilterBox() : null}
       </li>
     );
@@ -182,6 +190,7 @@ DraggableAttribute.propTypes = {
 export class Dropdown extends React.PureComponent {
   render() {
     return (
+      
       <div className="pvtDropdown" style={{zIndex: this.props.zIndex}}>
         <div
           onClick={e => {
@@ -213,7 +222,7 @@ export class Dropdown extends React.PureComponent {
                   }
                 }}
                 className={
-                  'pvtDropdownValue ' +
+                  'pvtDropdownValue2 ' +
                   (r === this.props.current ? 'pvtDropdownActiveValue' : '')
                 }
               >
@@ -222,9 +231,18 @@ export class Dropdown extends React.PureComponent {
             ))}
           </div>
         )}
+        <br/>
+        <SearchFilterUI onSearchChange={s => {
+          this.onSearchChange(s)
+        }}/>
       </div>
     );
   }
+
+  onSearchChange (s) {
+    this.props.onSearchChange(s)
+  }
+
 }
 
 class PivotTableUI extends React.PureComponent {
@@ -335,20 +353,63 @@ class PivotTableUI extends React.PureComponent {
     return this.state.openDropdown === dropdown;
   }
 
-  makeDnDCell(items, onChange, classes) {
-    return (
-      <Sortable
-        options={{
-          group: 'shared',
-          ghostClass: 'pvtPlaceholder',
-          filter: '.pvtFilterBox',
-          preventOnFilter: false,
-        }}
-        tag="td"
-        className={classes}
-        onChange={onChange}
-      >
-        {items.map(x => (
+  makeDnDCell(items, onChange, classes, categories = undefined) {
+    let collapsibles = [], draggables;
+    if (categories) {
+      for(let category in categories) {
+
+        draggables = [];
+        items.map(x => {
+          if (categories[category].includes(x)) {
+            draggables.push(<DraggableAttribute
+              name={x}
+              key={x}
+              attrValues={this.attrValues[x]}
+              valueFilter={this.props.valueFilter[x] || {}}
+              sorter={getSort(this.props.sorters, x)}
+              menuLimit={this.props.menuLimit}
+              setValuesInFilter={this.setValuesInFilter.bind(this)}
+              addValuesToFilter={this.addValuesToFilter.bind(this)}
+              moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
+              removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
+              zIndex={this.state.zIndices[x] || this.state.maxZIndex}
+            />);
+          }
+        });
+        let open = category.toLowerCase() === 'demographics' ? true : false;
+        collapsibles.push(
+          <Collapsible
+            trigger={category}
+            open={open}
+            //overflowWhenOpen="hidden" //Aji updated
+            className="attrListClosed"
+            openedClassName="attrListOpen"
+            triggerClassName="attrHeaderClosed"
+            triggerOpenedClassName="attrHeaderOpen"
+          >
+            <Sortable
+              options={{
+                group: 'shared',
+                ghostClass: 'pvtPlaceholder',
+                filter: '.pvtFilterBox',
+                preventOnFilter: false,
+              }}
+              tag="div"
+              onChange={onChange}
+              className={classes}
+            >
+              {draggables}
+            </Sortable>
+          </Collapsible>);
+      }
+      return (
+        <div>
+          {collapsibles}
+        </div>
+      )
+    } else {
+      items.map(x => {
+        collapsibles.push(
           <DraggableAttribute
             name={x}
             key={x}
@@ -362,9 +423,28 @@ class PivotTableUI extends React.PureComponent {
             removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
             zIndex={this.state.zIndices[x] || this.state.maxZIndex}
           />
-        ))}
-      </Sortable>
-    );
+        );
+      });
+      return (
+        <Sortable
+          options={{
+            group: 'shared',
+            ghostClass: 'pvtPlaceholder',
+            filter: '.pvtFilterBox',
+            preventOnFilter: false,
+          }}
+          tag="td"
+          className={classes}
+          onChange={onChange}
+        >
+          {collapsibles}
+        </Sortable>
+      )
+    }
+  }
+
+  onSearchChange (s) {
+    this.props.onSearchChange(s)
   }
 
   render() {
@@ -389,6 +469,9 @@ class PivotTableUI extends React.PureComponent {
             })
           }
           setValue={this.propUpdater('rendererName')}
+          onSearchChange={s => {
+            this.onSearchChange(s)
+          }}
         />
       </td>
     );
@@ -409,18 +492,6 @@ class PivotTableUI extends React.PureComponent {
 
     const aggregatorCell = (
       <td className="pvtVals">
-        <Dropdown
-          current={this.props.aggregatorName}
-          values={Object.keys(this.props.aggregators)}
-          open={this.isOpen('aggregators')}
-          zIndex={this.isOpen('aggregators') ? this.state.maxZIndex + 1 : 1}
-          toggle={() =>
-            this.setState({
-              openDropdown: this.isOpen('aggregators') ? false : 'aggregators',
-            })
-          }
-          setValue={this.propUpdater('aggregatorName')}
-        />
         <a
           role="button"
           className="pvtRowOrder"
@@ -428,8 +499,9 @@ class PivotTableUI extends React.PureComponent {
             this.propUpdater('rowOrder')(sortIcons[this.props.rowOrder].next)
           }
         >
-          {sortIcons[this.props.rowOrder].rowSymbol}
+         Sort rows {sortIcons[this.props.rowOrder].rowSymbol}
         </a>
+        <br/>
         <a
           role="button"
           className="pvtColOrder"
@@ -437,33 +509,9 @@ class PivotTableUI extends React.PureComponent {
             this.propUpdater('colOrder')(sortIcons[this.props.colOrder].next)
           }
         >
-          {sortIcons[this.props.colOrder].colSymbol}
+         Sort columns {sortIcons[this.props.colOrder].colSymbol}
         </a>
         {numValsAllowed > 0 && <br />}
-        {new Array(numValsAllowed).fill().map((n, i) => [
-          <Dropdown
-            key={i}
-            current={this.props.vals[i]}
-            values={Object.keys(this.attrValues).filter(
-              e =>
-                !this.props.hiddenAttributes.includes(e) &&
-                !this.props.hiddenFromAggregators.includes(e)
-            )}
-            open={this.isOpen(`val${i}`)}
-            zIndex={this.isOpen(`val${i}`) ? this.state.maxZIndex + 1 : 1}
-            toggle={() =>
-              this.setState({
-                openDropdown: this.isOpen(`val${i}`) ? false : `val${i}`,
-              })
-            }
-            setValue={value =>
-              this.sendPropUpdate({
-                vals: {$splice: [[i, 1, value]]},
-              })
-            }
-          />,
-          i + 1 !== numValsAllowed ? <br key={`br${i}`} /> : null,
-        ])}
       </td>
     );
 
@@ -479,13 +527,13 @@ class PivotTableUI extends React.PureComponent {
 
     const unusedLength = unusedAttrs.reduce((r, e) => r + e.length, 0);
     const horizUnused = unusedLength < this.props.unusedOrientationCutoff;
-
     const unusedAttrsCell = this.makeDnDCell(
       unusedAttrs,
       order => this.setState({unusedOrder: order}),
       `pvtAxisContainer pvtUnused ${
-        horizUnused ? 'pvtHorizList' : 'pvtVertList'
-      }`
+        horizUnused ? 'pvtHorizList' : 'pvtVertList collapsibleMenuContainer'
+      }`,
+      this.props.categoryToAttrMapping
     );
 
     const colAttrs = this.props.cols.filter(
