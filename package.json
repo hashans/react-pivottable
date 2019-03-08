@@ -80,6 +80,8 @@
     "PlotlyRenderers.js.map",
     "TableRenderers.js.map",
     "Utilities.js.map",
+    "SearchFilterView.js",
+    "SearchFitlerView.js.map",
     "pivottable.css"
   ],
   "homepage": "https://github.com/plotly/react-pivottable#readme",
