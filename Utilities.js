@@ -44,7 +44,7 @@ var addSeparators = function addSeparators(nStr, thousandsSep, decimalSep) {
 
 var numberFormat = function numberFormat(opts_in) {
   var defaults = {
-    digitsAfterDecimal: 2,
+    digitsAfterDecimal: 0,
     scaler: 1,
     thousandsSep: ',',
     decimalSep: '.',

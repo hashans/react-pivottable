@@ -35,13 +35,6 @@ table.pvtTable tbody tr th {
     padding: 5px;
 }
 
-table.pvtTable .pvtColLabel {
-    text-align: center;
-}
-table.pvtTable .pvtTotalLabel {
-    text-align: right;
-}
-
 table.pvtTable tbody tr td {
     color: #2a3f5f;
     padding: 5px;
@@ -49,11 +42,6 @@ table.pvtTable tbody tr td {
     border: 1px solid #c8d4e3;
     vertical-align: top;
     text-align: right;
-}
-
-.pvtTotal,
-.pvtGrandTotal {
-    font-weight: bold;
 }
 
 .pvtRowOrder,
@@ -181,6 +169,29 @@ table.pvtTable tbody tr td {
 .pvtTriangle {
     cursor: pointer;
     color: #506784;
+    margin-right: 2px;
+}
+
+.pvtTriangleHide {
+    cursor: pointer;
+    color: #506784;
+    display: none;
+}
+
+.pvtTriangleLabel {
+    max-width: 160px;
+    float: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.pvtTriangleLabelChild {
+    max-width: 160px;
+    float: right;
+    width: 160px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .pvtHorizList li {
@@ -330,4 +341,11 @@ table.pvtTable tbody tr td {
 
 .pvtSearch {
     margin-top: 5px;
+}
+
+.pvtCollapsible {
+    min-height: 400px;
+    max-height: 800px;
+    overflow: overlay;
+    /* overflow: scroll; */
 }

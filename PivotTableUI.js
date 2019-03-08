@@ -226,6 +226,8 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       var filtered = Object.keys(this.props.valueFilter).length !== 0 ? 'pvtFilteredAttribute' : '';
       return _react2.default.createElement(
         'li',
@@ -233,22 +235,44 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
         _react2.default.createElement(
           'span',
           {
-            className: 'pvtAttr ' + filtered,
-            onClick: this.toggleFilterBox.bind(this),
-            'data-tip': this.props.name
+            className: 'pvtAttr ' + filtered
           },
-          this.props.name,
+          _react2.default.createElement(
+            'span',
+            { className: 'pvtTriangleLabel', 'data-tip': this.props.name },
+            _react2.default.createElement(
+              'span',
+              { className: 'pvtTriangleLabelChild' },
+              this.props.name
+            )
+          ),
+          _react2.default.createElement(_reactTooltip2.default, { place: 'top', type: 'dark', effect: 'solid', delayHide: 100 }),
+          _react2.default.createElement(
+            'span',
+            { className: 'pvtTriangle', onClick: this.toggleFilterBox.bind(this) },
+            '   ',
+            '\u25BE'
+          ),
           _react2.default.createElement(
             'span',
             {
-              className: 'pvtTriangle',
-              onClick: this.toggleFilterBox.bind(this)
+              className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle",
+              onClick: function onClick() {
+                if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
+                  _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
+                        return item !== _this3.props.name;
+                      }) } });
+                } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
+                  _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
+                        return item !== _this3.props.name;
+                      }) } });
+                }
+              }
             },
-            ' ',
-            '\u25BE'
+            '   ',
+            '\u2715'
           )
         ),
-        _react2.default.createElement(_reactTooltip2.default, { place: 'top', type: 'dark', effect: 'solid' }),
         this.state.open ? this.getFilterBox() : null
       );
     }
@@ -285,7 +309,7 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
   _createClass(Dropdown, [{
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _react2.default.createElement(
         'div',
@@ -295,7 +319,7 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
           {
             onClick: function onClick(e) {
               e.stopPropagation();
-              _this4.props.toggle();
+              _this5.props.toggle();
             },
             className: 'pvtDropdownValue pvtDropdownCurrent ' + (this.props.open ? 'pvtDropdownCurrentOpen' : ''),
             role: 'button'
@@ -322,13 +346,13 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
                 role: 'button',
                 onClick: function onClick(e) {
                   e.stopPropagation();
-                  if (_this4.props.current === r) {
-                    _this4.props.toggle();
+                  if (_this5.props.current === r) {
+                    _this5.props.toggle();
                   } else {
-                    _this4.props.setValue(r);
+                    _this5.props.setValue(r);
                   }
                 },
-                className: 'pvtDropdownValue2 ' + (r === _this4.props.current ? 'pvtDropdownActiveValue' : '')
+                className: 'pvtDropdownValue2 ' + (r === _this5.props.current ? 'pvtDropdownActiveValue' : '')
               },
               r
             );
@@ -336,7 +360,7 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
         ),
         _react2.default.createElement('br', null),
         _react2.default.createElement(_SearchFilterView2.default, { onSearchChange: function onSearchChange(s) {
-            _this4.onSearchChange(s);
+            _this5.onSearchChange(s);
           } })
       );
     }
@@ -356,15 +380,15 @@ var PivotTableUI = function (_React$PureComponent2) {
   function PivotTableUI(props) {
     _classCallCheck(this, PivotTableUI);
 
-    var _this5 = _possibleConstructorReturn(this, (PivotTableUI.__proto__ || Object.getPrototypeOf(PivotTableUI)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (PivotTableUI.__proto__ || Object.getPrototypeOf(PivotTableUI)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       unusedOrder: [],
       zIndices: {},
       maxZIndex: 1000,
       openDropdown: false
     };
-    return _this5;
+    return _this6;
   }
 
   _createClass(PivotTableUI, [{
@@ -440,10 +464,10 @@ var PivotTableUI = function (_React$PureComponent2) {
   }, {
     key: 'propUpdater',
     value: function propUpdater(key) {
-      var _this6 = this;
+      var _this7 = this;
 
       return function (value) {
-        return _this6.sendPropUpdate(_defineProperty({}, key, { $set: value }));
+        return _this7.sendPropUpdate(_defineProperty({}, key, { $set: value }));
       };
     }
   }, {
@@ -495,9 +519,12 @@ var PivotTableUI = function (_React$PureComponent2) {
   }, {
     key: 'makeDnDCell',
     value: function makeDnDCell(items, onChange, classes) {
-      var _this7 = this;
+      var _this8 = this;
 
       var categories = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+
+
+      var selectedList = this.props.cols.concat(this.props.rows);
 
       var collapsibles = [],
           draggables = void 0;
@@ -510,15 +537,21 @@ var PivotTableUI = function (_React$PureComponent2) {
               draggables.push(_react2.default.createElement(DraggableAttribute, {
                 name: x,
                 key: x,
-                attrValues: _this7.attrValues[x],
-                valueFilter: _this7.props.valueFilter[x] || {},
-                sorter: (0, _Utilities.getSort)(_this7.props.sorters, x),
-                menuLimit: _this7.props.menuLimit,
-                setValuesInFilter: _this7.setValuesInFilter.bind(_this7),
-                addValuesToFilter: _this7.addValuesToFilter.bind(_this7),
-                moveFilterBoxToTop: _this7.moveFilterBoxToTop.bind(_this7),
-                removeValuesFromFilter: _this7.removeValuesFromFilter.bind(_this7),
-                zIndex: _this7.state.zIndices[x] || _this7.state.maxZIndex
+                attrValues: _this8.attrValues[x],
+                valueFilter: _this8.props.valueFilter[x] || {},
+                sorter: (0, _Utilities.getSort)(_this8.props.sorters, x),
+                menuLimit: _this8.props.menuLimit,
+                setValuesInFilter: _this8.setValuesInFilter.bind(_this8),
+                addValuesToFilter: _this8.addValuesToFilter.bind(_this8),
+                moveFilterBoxToTop: _this8.moveFilterBoxToTop.bind(_this8),
+                removeValuesFromFilter: _this8.removeValuesFromFilter.bind(_this8),
+                zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
+                isSelected: selectedList.includes(x),
+                cols: _this8.props.cols,
+                rows: _this8.props.rows,
+                onUpdateProperties: function onUpdateProperties(s) {
+                  return _this8.sendPropUpdate(s);
+                }
               }));
             }
           });
@@ -557,7 +590,7 @@ var PivotTableUI = function (_React$PureComponent2) {
         }
         return _react2.default.createElement(
           'div',
-          null,
+          { className: 'pvtCollapsible' },
           collapsibles
         );
       } else {
@@ -565,15 +598,21 @@ var PivotTableUI = function (_React$PureComponent2) {
           collapsibles.push(_react2.default.createElement(DraggableAttribute, {
             name: x,
             key: x,
-            attrValues: _this7.attrValues[x],
-            valueFilter: _this7.props.valueFilter[x] || {},
-            sorter: (0, _Utilities.getSort)(_this7.props.sorters, x),
-            menuLimit: _this7.props.menuLimit,
-            setValuesInFilter: _this7.setValuesInFilter.bind(_this7),
-            addValuesToFilter: _this7.addValuesToFilter.bind(_this7),
-            moveFilterBoxToTop: _this7.moveFilterBoxToTop.bind(_this7),
-            removeValuesFromFilter: _this7.removeValuesFromFilter.bind(_this7),
-            zIndex: _this7.state.zIndices[x] || _this7.state.maxZIndex
+            attrValues: _this8.attrValues[x],
+            valueFilter: _this8.props.valueFilter[x] || {},
+            sorter: (0, _Utilities.getSort)(_this8.props.sorters, x),
+            menuLimit: _this8.props.menuLimit,
+            setValuesInFilter: _this8.setValuesInFilter.bind(_this8),
+            addValuesToFilter: _this8.addValuesToFilter.bind(_this8),
+            moveFilterBoxToTop: _this8.moveFilterBoxToTop.bind(_this8),
+            removeValuesFromFilter: _this8.removeValuesFromFilter.bind(_this8),
+            zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
+            isSelected: selectedList.includes(x),
+            cols: _this8.props.cols,
+            rows: _this8.props.rows,
+            onUpdateProperties: function onUpdateProperties(s) {
+              return _this8.sendPropUpdate(s);
+            }
           }));
         });
         return _react2.default.createElement(
@@ -601,7 +640,7 @@ var PivotTableUI = function (_React$PureComponent2) {
   }, {
     key: 'render',
     value: function render() {
-      var _this8 = this;
+      var _this9 = this;
 
       var numValsAllowed = this.props.aggregators[this.props.aggregatorName]([])().numInputs || 0;
 
@@ -616,13 +655,13 @@ var PivotTableUI = function (_React$PureComponent2) {
           open: this.isOpen('renderer'),
           zIndex: this.isOpen('renderer') ? this.state.maxZIndex + 1 : 1,
           toggle: function toggle() {
-            return _this8.setState({
-              openDropdown: _this8.isOpen('renderer') ? false : 'renderer'
+            return _this9.setState({
+              openDropdown: _this9.isOpen('renderer') ? false : 'renderer'
             });
           },
           setValue: this.propUpdater('rendererName'),
           onSearchChange: function onSearchChange(s) {
-            _this8.onSearchChange(s);
+            _this9.onSearchChange(s);
           }
         })
       );
@@ -650,7 +689,7 @@ var PivotTableUI = function (_React$PureComponent2) {
             role: 'button',
             className: 'pvtRowOrder',
             onClick: function onClick() {
-              return _this8.propUpdater('rowOrder')(sortIcons[_this8.props.rowOrder].next);
+              return _this9.propUpdater('rowOrder')(sortIcons[_this9.props.rowOrder].next);
             }
           },
           'Sort rows ',
@@ -663,7 +702,7 @@ var PivotTableUI = function (_React$PureComponent2) {
             role: 'button',
             className: 'pvtColOrder',
             onClick: function onClick() {
-              return _this8.propUpdater('colOrder')(sortIcons[_this8.props.colOrder].next);
+              return _this9.propUpdater('colOrder')(sortIcons[_this9.props.colOrder].next);
             }
           },
           'Sort columns ',
@@ -673,7 +712,7 @@ var PivotTableUI = function (_React$PureComponent2) {
       );
 
       var unusedAttrs = Object.keys(this.attrValues).filter(function (e) {
-        return !_this8.props.rows.includes(e) && !_this8.props.cols.includes(e) && !_this8.props.hiddenAttributes.includes(e) && !_this8.props.hiddenFromDragDrop.includes(e);
+        return !_this9.props.rows.includes(e) && !_this9.props.cols.includes(e) && !_this9.props.hiddenAttributes.includes(e) && !_this9.props.hiddenFromDragDrop.includes(e);
       }).sort((0, _Utilities.sortAs)(this.state.unusedOrder));
 
       var unusedLength = unusedAttrs.reduce(function (r, e) {
@@ -681,17 +720,17 @@ var PivotTableUI = function (_React$PureComponent2) {
       }, 0);
       var horizUnused = unusedLength < this.props.unusedOrientationCutoff;
       var unusedAttrsCell = this.makeDnDCell(unusedAttrs, function (order) {
-        return _this8.setState({ unusedOrder: order });
+        return _this9.setState({ unusedOrder: order });
       }, 'pvtAxisContainer pvtUnused ' + (horizUnused ? 'pvtHorizList' : 'pvtVertList collapsibleMenuContainer'), this.props.categoryToAttrMapping);
 
       var colAttrs = this.props.cols.filter(function (e) {
-        return !_this8.props.hiddenAttributes.includes(e) && !_this8.props.hiddenFromDragDrop.includes(e);
+        return !_this9.props.hiddenAttributes.includes(e) && !_this9.props.hiddenFromDragDrop.includes(e);
       });
 
       var colAttrsCell = this.makeDnDCell(colAttrs, this.propUpdater('cols'), 'pvtAxisContainer pvtHorizList pvtCols');
 
       var rowAttrs = this.props.rows.filter(function (e) {
-        return !_this8.props.hiddenAttributes.includes(e) && !_this8.props.hiddenFromDragDrop.includes(e);
+        return !_this9.props.hiddenAttributes.includes(e) && !_this9.props.hiddenFromDragDrop.includes(e);
       });
       var rowAttrsCell = this.makeDnDCell(rowAttrs, this.propUpdater('rows'), 'pvtAxisContainer pvtVertList pvtRows');
       var outputCell = _react2.default.createElement(
@@ -709,7 +748,7 @@ var PivotTableUI = function (_React$PureComponent2) {
           _react2.default.createElement(
             'tbody',
             { onClick: function onClick() {
-                return _this8.setState({ openDropdown: false });
+                return _this9.setState({ openDropdown: false });
               } },
             _react2.default.createElement(
               'tr',
@@ -739,7 +778,7 @@ var PivotTableUI = function (_React$PureComponent2) {
         _react2.default.createElement(
           'tbody',
           { onClick: function onClick() {
-              return _this8.setState({ openDropdown: false });
+              return _this9.setState({ openDropdown: false });
             } },
           _react2.default.createElement(
             'tr',

@@ -25,7 +25,7 @@ const addSeparators = function(nStr, thousandsSep, decimalSep) {
 
 const numberFormat = function(opts_in) {
   const defaults = {
-    digitsAfterDecimal: 2,
+    digitsAfterDecimal: 0,
     scaler: 1,
     thousandsSep: ',',
     decimalSep: '.',

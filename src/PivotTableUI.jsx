@@ -144,6 +144,7 @@ export class DraggableAttribute extends React.Component {
   }
 
   render() {
+
     const filtered =
       Object.keys(this.props.valueFilter).length !== 0
         ? 'pvtFilteredAttribute'
@@ -152,19 +153,32 @@ export class DraggableAttribute extends React.Component {
       <li data-id={this.props.name}>
         <span
           className={'pvtAttr ' + filtered}
-          onClick={this.toggleFilterBox.bind(this)}
-          data-tip={this.props.name}
-        >
-          {this.props.name}
-          <span
-            className="pvtTriangle"
-            onClick={this.toggleFilterBox.bind(this)}
-          >
-            {' '}
+        >           
+          <span className="pvtTriangleLabel"  data-tip={this.props.name}>
+            <span className="pvtTriangleLabelChild">
+              {this.props.name}
+            </span>
+
+          </span>
+          <ReactTooltip place="top" type="dark" effect="solid" delayHide={100}/>
+          <span className="pvtTriangle" onClick={this.toggleFilterBox.bind(this)}>            
+            {'   '}
             ▾
           </span>
+          <span
+            className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}
+            onClick={ ()=> {
+              if (this.props.cols.indexOf(this.props.name) !== -1) {
+                this.props.onUpdateProperties({cols: {$set: this.props.cols.filter( (item) => { return item !== this.props.name})}})
+              } else if (this.props.rows.indexOf(this.props.name) !== -1) {
+                this.props.onUpdateProperties({rows: {$set: this.props.rows.filter( (item) => { return item !== this.props.name})}})
+              }
+            }}
+          >
+            {'   '}
+            ✕
+          </span>
         </span>
-        <ReactTooltip place="top" type="dark" effect="solid"/>
         {this.state.open ? this.getFilterBox() : null}
       </li>
     );
@@ -240,7 +254,7 @@ export class Dropdown extends React.PureComponent {
   }
 
   onSearchChange (s) {
-    this.props.onSearchChange(s)
+    this.props.onSearchChange(s);
   }
 
 }
@@ -354,6 +368,9 @@ class PivotTableUI extends React.PureComponent {
   }
 
   makeDnDCell(items, onChange, classes, categories = undefined) {
+
+    const selectedList = this.props.cols.concat(this.props.rows)
+
     let collapsibles = [], draggables;
     if (categories) {
       for(let category in categories) {
@@ -373,6 +390,10 @@ class PivotTableUI extends React.PureComponent {
               moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
               removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
               zIndex={this.state.zIndices[x] || this.state.maxZIndex}
+              isSelected={selectedList.includes(x)}
+              cols={this.props.cols}
+              rows={this.props.rows}
+              onUpdateProperties={ (s) => this.sendPropUpdate(s)}
             />);
           }
         });
@@ -403,7 +424,7 @@ class PivotTableUI extends React.PureComponent {
           </Collapsible>);
       }
       return (
-        <div>
+        <div className="pvtCollapsible">
           {collapsibles}
         </div>
       )
@@ -422,6 +443,10 @@ class PivotTableUI extends React.PureComponent {
             moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
             removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
             zIndex={this.state.zIndices[x] || this.state.maxZIndex}
+            isSelected={selectedList.includes(x)}
+            cols={this.props.cols}
+            rows={this.props.rows}
+            onUpdateProperties={ (s) => this.sendPropUpdate(s)}
           />
         );
       });
