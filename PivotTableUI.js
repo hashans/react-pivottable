@@ -37,13 +37,13 @@ var _reactCollapsible = require('react-collapsible');
 
 var _reactCollapsible2 = _interopRequireDefault(_reactCollapsible);
 
-var _reactTooltip = require('react-tooltip');
-
-var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
-
 var _SearchFilterView = require('./SearchFilterView');
 
 var _SearchFilterView2 = _interopRequireDefault(_SearchFilterView);
+
+var _reactTooltipLite = require('react-tooltip-lite');
+
+var _reactTooltipLite2 = _interopRequireDefault(_reactTooltipLite);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -66,7 +66,7 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
 
     var _this = _possibleConstructorReturn(this, (DraggableAttribute.__proto__ || Object.getPrototypeOf(DraggableAttribute)).call(this, props));
 
-    _this.state = { open: false, filterText: '' };
+    _this.state = { open: false, filterText: '', showTooltip: false };
     return _this;
   }
 
@@ -224,6 +224,16 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
       this.props.moveFilterBoxToTop(this.props.name);
     }
   }, {
+    key: 'hideTooltips',
+    value: function hideTooltips() {
+      this.setState({ showTooltip: false });
+    }
+  }, {
+    key: 'showTooltips',
+    value: function showTooltips() {
+      this.setState({ showTooltip: true });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this3 = this;
@@ -231,22 +241,23 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
       var filtered = Object.keys(this.props.valueFilter).length !== 0 ? 'pvtFilteredAttribute' : '';
       return _react2.default.createElement(
         'li',
-        { 'data-id': this.props.name },
+        { 'data-id': this.props.name, onMouseDown: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this), onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
         _react2.default.createElement(
           'span',
-          {
-            className: 'pvtAttr ' + filtered
-          },
+          { className: 'pvtAttr ' + filtered },
           _react2.default.createElement(
             'span',
             { className: 'pvtTriangleLabel', 'data-tip': this.props.name },
             _react2.default.createElement(
-              'span',
-              { className: 'pvtTriangleLabelChild' },
-              this.props.name
+              _reactTooltipLite2.default,
+              { content: this.props.name, hoverDelay: 1000, useHover: this.state.showTooltip },
+              _react2.default.createElement(
+                'span',
+                { className: 'pvtTriangleLabelChild' },
+                this.props.name
+              )
             )
           ),
-          _react2.default.createElement(_reactTooltip2.default, { place: 'top', type: 'dark', effect: 'solid', delayHide: 100 }),
           _react2.default.createElement(
             'span',
             { className: 'pvtTriangle', onClick: this.toggleFilterBox.bind(this) },

@@ -6,8 +6,8 @@ import PivotTable from './PivotTable';
 import Sortable from 'react-sortablejs';
 import Draggable from 'react-draggable';
 import Collapsible from 'react-collapsible';
-import ReactTooltip from 'react-tooltip';
 import SearchFilterUI from "./SearchFilterView";
+import Tooltip from 'react-tooltip-lite';
 
 /* eslint-disable react/prop-types */
 // eslint can't see inherited propTypes!
@@ -15,7 +15,7 @@ import SearchFilterUI from "./SearchFilterView";
 export class DraggableAttribute extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {open: false, filterText: ''};
+    this.state = {open: false, filterText: '', showTooltip : false};
   }
 
   toggleValue(value) {
@@ -143,6 +143,14 @@ export class DraggableAttribute extends React.Component {
     this.props.moveFilterBoxToTop(this.props.name);
   }
 
+  hideTooltips(){
+    this.setState({ showTooltip: false});
+  }
+
+  showTooltips(){
+    this.setState({ showTooltip: true});
+  }
+
   render() {
 
     const filtered =
@@ -150,17 +158,15 @@ export class DraggableAttribute extends React.Component {
         ? 'pvtFilteredAttribute'
         : '';
     return (
-      <li data-id={this.props.name}>
-        <span
-          className={'pvtAttr ' + filtered}
-        >           
+      <li data-id={this.props.name} onMouseDown={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)} onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
+        <span className={'pvtAttr ' + filtered}>     
           <span className="pvtTriangleLabel"  data-tip={this.props.name}>
-            <span className="pvtTriangleLabelChild">
-              {this.props.name}
-            </span>
-
+            <Tooltip content={this.props.name} hoverDelay={1000} useHover={this.state.showTooltip}>
+              <span className="pvtTriangleLabelChild">
+                {this.props.name}
+              </span>
+            </Tooltip>
           </span>
-          <ReactTooltip place="top" type="dark" effect="solid" delayHide={100}/>
           <span className="pvtTriangle" onClick={this.toggleFilterBox.bind(this)}>            
             {'   '}
             ▾
