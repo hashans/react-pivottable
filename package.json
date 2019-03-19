@@ -73,11 +73,13 @@
     "PivotTable.js",
     "PivotTableUI.js",
     "PlotlyRenderers.js",
+    "SearchFilterView.js",
     "TableRenderers.js",
     "Utilities.js",
     "PivotTable.js.map",
     "PivotTableUI.js.map",
     "PlotlyRenderers.js.map",
+    "SearchFilterView.js.map",
     "TableRenderers.js.map",
     "Utilities.js.map",
     "pivottable.css"
