@@ -97,16 +97,17 @@ table.pvtTable tbody tr td {
 }
 
 .pvtDropdownCurrentOpen {
-    border-radius: 4px 4px 0 0;
+    border-radius: 0px;
 }
 
 .pvtDropdownMenu {
     background: white;
     z-index: 1;
     position: absolute;
-    width: 100%;
-    margin-top: -1px;
-    border-radius: 0 0 4px 4px;
+    width: 210px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 0px;
     border: 1px solid #a2b1c6;
     border-top: 1px solid #dfe8f3;
     box-sizing: border-box;
@@ -176,8 +177,6 @@ table.pvtTable tbody tr td {
 }
 
 .pvtTriangleHide {
-    cursor: pointer;
-    color: #506784;
     display: none;
 }
 
@@ -348,7 +347,7 @@ table.pvtTable tbody tr td {
 
 .pvtCollapsible {
     min-height: 400px;
-    max-height: 800px;
+    max-height: 600px;
     overflow: overlay;
     /* overflow: scroll; */
 }
@@ -356,4 +355,28 @@ table.pvtTable tbody tr td {
 .react-tooltip-lite {
     background: #333333;
     color: white;
+}
+
+.pvtCheckContainer > p > label {
+    margin-bottom: 10px;
+    font-weight: 200;
+}
+
+.pvtLabel {
+    max-width: 100%;
+    margin-bottom: 4px;
+    margin-left: 15px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: left !important;
+}
+
+.pvtIcon {
+    font-size: 12px;
+}
+
+.pvt-output-title {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-weight: 400;
 }

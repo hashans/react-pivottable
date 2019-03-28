@@ -45,6 +45,18 @@ var _reactTooltipLite = require('react-tooltip-lite');
 
 var _reactTooltipLite2 = _interopRequireDefault(_reactTooltipLite);
 
+var _reactCheckbox = require('@material/react-checkbox');
+
+var _reactCheckbox2 = _interopRequireDefault(_reactCheckbox);
+
+var _reactMaterialIcon = require('@material/react-material-icon');
+
+var _reactMaterialIcon2 = _interopRequireDefault(_reactMaterialIcon);
+
+require('@material/react-checkbox/dist/checkbox.css');
+
+require('@material/react-material-icon/dist/material-icon.css');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -194,23 +206,22 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
                   },
                   className: x in _this2.props.valueFilter ? '' : 'selected'
                 },
+                _react2.default.createElement(_reactCheckbox2.default, {
+                  nativeControlId: x.replace(' ', '').toLowerCase(),
+                  checked: x in _this2.props.valueFilter ? false : true,
+                  onChange: function onChange(e) {
+                    return _this2.toggleValue(x);
+                  }
+                }),
                 _react2.default.createElement(
-                  'a',
-                  { className: 'pvtOnly', onClick: function onClick(e) {
-                      return _this2.selectOnly(e, x);
-                    } },
-                  'only'
-                ),
-                _react2.default.createElement(
-                  'a',
-                  { className: 'pvtOnlySpacer' },
-                  '\xA0'
-                ),
-                x === '' ? _react2.default.createElement(
-                  'em',
-                  null,
-                  'null'
-                ) : x
+                  'label',
+                  { htmlFor: x.replace(' ', '').toLowerCase() },
+                  x === '' ? _react2.default.createElement(
+                    'em',
+                    null,
+                    'null'
+                  ) : x
+                )
               );
             })
           )
@@ -238,50 +249,56 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
     value: function render() {
       var _this3 = this;
 
-      var filtered = Object.keys(this.props.valueFilter).length !== 0 ? 'pvtFilteredAttribute' : '';
+      var filtered = Object.keys(this.props.valueFilter).length !== 0 ? _react2.default.createElement(
+        'span',
+        { className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle" },
+        _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'filter_list', className: 'pvtIcon' })
+      ) : _react2.default.createElement('span', null);
       return _react2.default.createElement(
         'li',
-        { 'data-id': this.props.name, onMouseDown: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this), onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
+        { 'data-id': this.props.name },
         _react2.default.createElement(
           'span',
-          { className: 'pvtAttr ' + filtered },
+          { className: 'pvtAttr', onDrag: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this), onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
           _react2.default.createElement(
-            'span',
-            { className: 'pvtTriangleLabel', 'data-tip': this.props.name },
+            _reactTooltipLite2.default,
+            { content: this.props.name, hoverDelay: 200, useHover: this.state.showTooltip },
             _react2.default.createElement(
-              _reactTooltipLite2.default,
-              { content: this.props.name, hoverDelay: 1000, useHover: this.state.showTooltip },
+              'span',
+              { className: 'pvtTriangleLabel', 'data-tip': this.props.name },
               _react2.default.createElement(
                 'span',
                 { className: 'pvtTriangleLabelChild' },
+                filtered,
+                ' ',
                 this.props.name
               )
-            )
-          ),
-          _react2.default.createElement(
-            'span',
-            { className: 'pvtTriangle', onClick: this.toggleFilterBox.bind(this) },
-            '   ',
-            '\u25BE'
-          ),
-          _react2.default.createElement(
-            'span',
-            {
-              className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle",
-              onClick: function onClick() {
-                if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
-                  _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
-                        return item !== _this3.props.name;
-                      }) } });
-                } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
-                  _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
-                        return item !== _this3.props.name;
-                      }) } });
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: 'pvtTriangle', onClick: this.toggleFilterBox.bind(this) },
+              '   ',
+              '\u25BE'
+            ),
+            _react2.default.createElement(
+              'span',
+              {
+                className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle",
+                onClick: function onClick() {
+                  if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
+                    _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
+                          return item !== _this3.props.name;
+                        }) } });
+                  } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
+                    _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
+                          return item !== _this3.props.name;
+                        }) } });
+                  }
                 }
-              }
-            },
-            '   ',
-            '\u2715'
+              },
+              '   ',
+              '\u2715'
+            )
           )
         ),
         this.state.open ? this.getFilterBox() : null
@@ -327,6 +344,11 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
         { className: 'pvtDropdown', style: { zIndex: this.props.zIndex } },
         _react2.default.createElement(
           'div',
+          { className: 'pvtLabel' },
+          'Visualization Format'
+        ),
+        _react2.default.createElement(
+          'div',
           {
             onClick: function onClick(e) {
               e.stopPropagation();
@@ -338,7 +360,7 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
           _react2.default.createElement(
             'div',
             { className: 'pvtDropdownIcon' },
-            this.props.open ? '×' : '▾'
+            this.props.open ? '▲' : '▼'
           ),
           this.props.current || _react2.default.createElement(
             'span',
@@ -747,6 +769,11 @@ var PivotTableUI = function (_React$PureComponent2) {
       var outputCell = _react2.default.createElement(
         'td',
         { className: 'pvtOutput' },
+        _react2.default.createElement(
+          'div',
+          { className: 'pvt-output-title' },
+          this.props.rendererName
+        ),
         _react2.default.createElement(_PivotTable2.default, (0, _immutabilityHelper2.default)(this.props, {
           data: { $set: this.materializedInput }
         }))

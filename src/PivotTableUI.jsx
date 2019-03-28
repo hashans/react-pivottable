@@ -8,6 +8,11 @@ import Draggable from 'react-draggable';
 import Collapsible from 'react-collapsible';
 import SearchFilterUI from "./SearchFilterView";
 import Tooltip from 'react-tooltip-lite';
+import Checkbox from '@material/react-checkbox';
+import MaterialIcon from '@material/react-material-icon';
+
+import "@material/react-checkbox/dist/checkbox.css";
+import '@material/react-material-icon/dist/material-icon.css'
 
 /* eslint-disable react/prop-types */
 // eslint can't see inherited propTypes!
@@ -123,12 +128,13 @@ export class DraggableAttribute extends React.Component {
                   onClick={() => this.toggleValue(x)}
                   className={x in this.props.valueFilter ? '' : 'selected'}
                 >
-                  <a className="pvtOnly" onClick={e => this.selectOnly(e, x)}>
-                    only
-                  </a>
-                  <a className="pvtOnlySpacer">&nbsp;</a>
+                  <Checkbox
+                    nativeControlId={x.replace(' ','').toLowerCase()}
+                    checked={x in this.props.valueFilter ? false : true }
+                    onChange={(e) => this.toggleValue(x)}
+                  />
 
-                  {x === '' ? <em>null</em> : x}
+                  <label htmlFor={x.replace(' ','').toLowerCase()}>{x === '' ? <em>null</em> : x}</label>
                 </p>
               ))}
             </div>
@@ -155,17 +161,18 @@ export class DraggableAttribute extends React.Component {
 
     const filtered =
       Object.keys(this.props.valueFilter).length !== 0
-        ? 'pvtFilteredAttribute'
-        : '';
+        ?  (<span className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}>
+          <MaterialIcon icon="filter_list" className="pvtIcon"/></span>)
+        : (<span></span>);
     return (
-      <li data-id={this.props.name} onMouseDown={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)} onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
-        <span className={'pvtAttr ' + filtered}>     
+      <li data-id={this.props.name}>
+
+        <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)} onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
+          <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>     
           <span className="pvtTriangleLabel"  data-tip={this.props.name}>
-            <Tooltip content={this.props.name} hoverDelay={1000} useHover={this.state.showTooltip}>
-              <span className="pvtTriangleLabelChild">
-                {this.props.name}
-              </span>
-            </Tooltip>
+            <span className="pvtTriangleLabelChild">
+              {filtered} {this.props.name}
+            </span>
           </span>
           <span className="pvtTriangle" onClick={this.toggleFilterBox.bind(this)}>            
             {'   '}
@@ -184,6 +191,7 @@ export class DraggableAttribute extends React.Component {
             {'   '}
             ✕
           </span>
+          </Tooltip>
         </span>
         {this.state.open ? this.getFilterBox() : null}
       </li>
@@ -210,8 +218,8 @@ DraggableAttribute.propTypes = {
 export class Dropdown extends React.PureComponent {
   render() {
     return (
-      
       <div className="pvtDropdown" style={{zIndex: this.props.zIndex}}>
+        <div className="pvtLabel">Visualization Format</div>
         <div
           onClick={e => {
             e.stopPropagation();
@@ -223,7 +231,7 @@ export class Dropdown extends React.PureComponent {
           }
           role="button"
         >
-          <div className="pvtDropdownIcon">{this.props.open ? '×' : '▾'}</div>
+          <div className="pvtDropdownIcon">{this.props.open ? '▲' : '▼'}</div>
           {this.props.current || <span>&nbsp;</span>}
         </div>
 
@@ -591,6 +599,7 @@ class PivotTableUI extends React.PureComponent {
     );
     const outputCell = (
       <td className="pvtOutput">
+        <div className="pvt-output-title">{this.props.rendererName}</div>
         <PivotTable
           {...update(this.props, {
             data: {$set: this.materializedInput},
@@ -657,3 +666,4 @@ PivotTableUI.defaultProps = Object.assign({}, PivotTable.defaultProps, {
 });
 
 export default PivotTableUI;
+

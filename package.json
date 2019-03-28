@@ -5,28 +5,26 @@
       "/Users/rdeshapriya/projects/proxi-hub"
     ]
   ],
-  "_from": "react-pivottable@0.9.0",
+  "_from": "git+https://github.com/ramdesh/react-pivottable.git",
   "_id": "react-pivottable@0.9.0",
   "_inBundle": false,
   "_integrity": "sha512-fs1pGV5z4BvOXL4iLu79kKCLgR5XINW2ZredJHoPqXEMbJaIv50Eoec1XowWf3i3Dvdb8EYgvNqlF2ggC4GJOw==",
   "_location": "/react-pivottable",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "react-pivottable@0.9.0",
-    "name": "react-pivottable",
-    "escapedName": "react-pivottable",
-    "rawSpec": "0.9.0",
-    "saveSpec": null,
-    "fetchSpec": "0.9.0"
+    "type": "git",
+    "raw": "git+https://github.com/ramdesh/react-pivottable.git",
+    "rawSpec": "git+https://github.com/ramdesh/react-pivottable.git",
+    "saveSpec": "git+https://github.com/ramdesh/react-pivottable.git",
+    "fetchSpec": "https://github.com/ramdesh/react-pivottable.git",
+    "gitCommittish": null
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/react-pivottable/-/react-pivottable-0.9.0.tgz",
-  "_spec": "0.9.0",
-  "_where": "/Users/rdeshapriya/projects/proxi-hub",
+  "_resolved": "git+https://github.com/ramdesh/react-pivottable.git#1843b70fdb8d7ac0fca16db9493c2a552943ba67",
+  "_spec": "git+https://github.com/ramdesh/react-pivottable.git",
+  "_where": "/Users/tsshiek/Desktop/proxi-hub",
   "author": {
     "name": "Nicolas Kruchten",
     "email": "nicolas@kruchten.com"
@@ -34,7 +32,10 @@
   "bugs": {
     "url": "https://github.com/plotly/react-pivottable/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
+    "@material/react-checkbox": "^0.11.0",
+    "@material/react-material-icon": "^0.11.0",
     "immutability-helper": "^2.3.1",
     "prop-types": "^15.5.10",
     "react-collapsible": "^2.6.0",
@@ -44,6 +45,7 @@
     "react-tooltip-lite": "^1.9.1",
     "sortablejs": "^1.6.1"
   },
+  "deprecated": false,
   "description": "A React-based pivot table",
   "devDependencies": {
     "babel-cli": "^6.26.0",
