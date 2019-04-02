@@ -69,7 +69,7 @@ export class DraggableAttribute extends React.Component {
           <a onClick={() => this.setState({open: false})} className="pvtCloseX">
             ×
           </a>
-          <span className="pvtDragHandle">☰</span>
+          <span className="pvtDragHandle">⠿</span>
           <h4>{this.props.name}</h4>
 
 
@@ -82,6 +82,16 @@ export class DraggableAttribute extends React.Component {
                 placeholder="Filter values"
                 className="pvtSearch"
                 value={this.state.filterText}
+                onKeyUp={ e => {
+                  let code = e.charCode || e.keyCode;
+                  if(code === 27 && this.state.filterText === ""){
+                    this.setState({open: false});
+                  } else if (code === 27) {
+                    this.setState({
+                      filterText: "",
+                    })
+                  } 
+                }}
                 onChange={e =>
                   this.setState({
                     filterText: e.target.value,
@@ -158,7 +168,7 @@ export class DraggableAttribute extends React.Component {
   }
 
   render() {
-
+    const chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up"
     const filtered =
       Object.keys(this.props.valueFilter).length !== 0
         ?  (<span className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}>
@@ -166,31 +176,27 @@ export class DraggableAttribute extends React.Component {
         : (<span></span>);
     return (
       <li data-id={this.props.name}>
-
         <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)} onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
-          <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>     
-          <span className="pvtTriangleLabel"  data-tip={this.props.name}>
-            <span className="pvtTriangleLabelChild">
-              {filtered} {this.props.name}
+          <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>
+          <div className="pvt-braille-pattern">⠿</div>
+          <div className="pvt-attr-container">   
+            <div className="pvt-attr-text-container" data-tip={this.props.name}>{filtered} {this.props.name}
+            </div>
+            <span
+              className={(this.props.isSelected === false) ? "pvt-attr-close-hidden" : "pvt-attr-close-visible"}
+              onClick={ ()=> {
+                if (this.props.cols.indexOf(this.props.name) !== -1) {
+                  this.props.onUpdateProperties({cols: {$set: this.props.cols.filter( (item) => { return item !== this.props.name})}})
+                } else if (this.props.rows.indexOf(this.props.name) !== -1) {
+                  this.props.onUpdateProperties({rows: {$set: this.props.rows.filter( (item) => { return item !== this.props.name})}})
+                }
+              }}
+            >
+              {'   '}
+              ✕
             </span>
-          </span>
-          <span className="pvtTriangle" onClick={this.toggleFilterBox.bind(this)}>            
-            {'   '}
-            ▾
-          </span>
-          <span
-            className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}
-            onClick={ ()=> {
-              if (this.props.cols.indexOf(this.props.name) !== -1) {
-                this.props.onUpdateProperties({cols: {$set: this.props.cols.filter( (item) => { return item !== this.props.name})}})
-              } else if (this.props.rows.indexOf(this.props.name) !== -1) {
-                this.props.onUpdateProperties({rows: {$set: this.props.rows.filter( (item) => { return item !== this.props.name})}})
-              }
-            }}
-          >
-            {'   '}
-            ✕
-          </span>
+            <span className={chevronClass} onClick={this.toggleFilterBox.bind(this)}>▾</span> 
+          </div>
           </Tooltip>
         </span>
         {this.state.open ? this.getFilterBox() : null}
@@ -231,7 +237,7 @@ export class Dropdown extends React.PureComponent {
           }
           role="button"
         >
-          <div className="pvtDropdownIcon">{this.props.open ? '▲' : '▼'}</div>
+          <div className={this.props.open ? "pvtDropdownIconOpen" : "pvtDropdownIcon"} >▾</div>
           {this.props.current || <span>&nbsp;</span>}
         </div>
 

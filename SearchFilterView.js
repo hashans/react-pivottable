@@ -62,7 +62,15 @@ var SearchFilter = function (_React$PureComponent) {
           _react2.default.createElement("input", {
             value: this.props.searchValue,
             className: "pvtDropdownValue pvtDropdownCurrent pvtSearch",
-            placeholder: "Search",
+            placeholder: "Search"
+            //onKeyUp={(e) => this.onKepPressed(e, this)}
+            , onKeyUp: function onKeyUp(s) {
+              var code = s.charCode || s.keyCode;
+              if (code === 27) {
+                s.target.value = "";
+                _this2.onSearchChange(s);
+              }
+            },
             onChange: function onChange(s) {
               _this2.onSearchChange(s);
             } })

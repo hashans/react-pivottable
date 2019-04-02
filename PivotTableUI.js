@@ -140,7 +140,7 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
           _react2.default.createElement(
             'span',
             { className: 'pvtDragHandle' },
-            '\u2630'
+            '\u283F'
           ),
           _react2.default.createElement(
             'h4',
@@ -160,6 +160,16 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
               placeholder: 'Filter values',
               className: 'pvtSearch',
               value: this.state.filterText,
+              onKeyUp: function onKeyUp(e) {
+                var code = e.charCode || e.keyCode;
+                if (code === 27 && _this2.state.filterText === "") {
+                  _this2.setState({ open: false });
+                } else if (code === 27) {
+                  _this2.setState({
+                    filterText: ""
+                  });
+                }
+              },
               onChange: function onChange(e) {
                 return _this2.setState({
                   filterText: e.target.value
@@ -249,6 +259,7 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
     value: function render() {
       var _this3 = this;
 
+      var chevronClass = this.state.open === false ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up";
       var filtered = Object.keys(this.props.valueFilter).length !== 0 ? _react2.default.createElement(
         'span',
         { className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle" },
@@ -264,40 +275,44 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
             _reactTooltipLite2.default,
             { content: this.props.name, hoverDelay: 200, useHover: this.state.showTooltip },
             _react2.default.createElement(
-              'span',
-              { className: 'pvtTriangleLabel', 'data-tip': this.props.name },
+              'div',
+              { className: 'pvt-braille-pattern' },
+              '\u283F'
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'pvt-attr-container' },
               _react2.default.createElement(
-                'span',
-                { className: 'pvtTriangleLabelChild' },
+                'div',
+                { className: 'pvt-attr-text-container', 'data-tip': this.props.name },
                 filtered,
                 ' ',
                 this.props.name
-              )
-            ),
-            _react2.default.createElement(
-              'span',
-              { className: 'pvtTriangle', onClick: this.toggleFilterBox.bind(this) },
-              '   ',
-              '\u25BE'
-            ),
-            _react2.default.createElement(
-              'span',
-              {
-                className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle",
-                onClick: function onClick() {
-                  if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
-                    _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
-                          return item !== _this3.props.name;
-                        }) } });
-                  } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
-                    _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
-                          return item !== _this3.props.name;
-                        }) } });
+              ),
+              _react2.default.createElement(
+                'span',
+                {
+                  className: this.props.isSelected === false ? "pvt-attr-close-hidden" : "pvt-attr-close-visible",
+                  onClick: function onClick() {
+                    if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
+                      _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
+                            return item !== _this3.props.name;
+                          }) } });
+                    } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
+                      _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
+                            return item !== _this3.props.name;
+                          }) } });
+                    }
                   }
-                }
-              },
-              '   ',
-              '\u2715'
+                },
+                '   ',
+                '\u2715'
+              ),
+              _react2.default.createElement(
+                'span',
+                { className: chevronClass, onClick: this.toggleFilterBox.bind(this) },
+                '\u25BE'
+              )
             )
           )
         ),
@@ -359,8 +374,8 @@ var Dropdown = exports.Dropdown = function (_React$PureComponent) {
           },
           _react2.default.createElement(
             'div',
-            { className: 'pvtDropdownIcon' },
-            this.props.open ? '▲' : '▼'
+            { className: this.props.open ? "pvtDropdownIconOpen" : "pvtDropdownIcon" },
+            '\u25BE'
           ),
           this.props.current || _react2.default.createElement(
             'span',

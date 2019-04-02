@@ -29,10 +29,19 @@ class SearchFilter extends React.PureComponent {
             value= {this.props.searchValue} 
             className= "pvtDropdownValue pvtDropdownCurrent pvtSearch"
             placeholder= "Search"
+            //onKeyUp={(e) => this.onKepPressed(e, this)}
+            onKeyUp={ s => {
+              let code = s.charCode || s.keyCode;
+                if (code === 27) {
+                  s.target.value=""
+                  this.onSearchChange(s)
+                }
+            }}
             onChange= { s => {
               this.onSearchChange(s)
             }}>
           </input>
+
         </Col>
       </div>
     );
