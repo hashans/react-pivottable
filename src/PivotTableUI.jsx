@@ -10,6 +10,7 @@ import SearchFilterUI from "./SearchFilterView";
 import Tooltip from 'react-tooltip-lite';
 import Checkbox from '@material/react-checkbox';
 import MaterialIcon from '@material/react-material-icon';
+import * as HelpConstants from './HelpConstants';
 
 import "@material/react-checkbox/dist/checkbox.css";
 import '@material/react-material-icon/dist/material-icon.css'
@@ -168,7 +169,8 @@ export class DraggableAttribute extends React.Component {
   }
 
   render() {
-    const chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up"
+    let chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up"
+    chevronClass += (this.props.isSelected === false) ? " pvt-attr-close-hidden" : " pvt-attr-close-visible";
     const filtered =
       Object.keys(this.props.valueFilter).length !== 0
         ?  (<span className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}>
@@ -176,11 +178,13 @@ export class DraggableAttribute extends React.Component {
         : (<span></span>);
     return (
       <li data-id={this.props.name}>
-        <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)} onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
+        <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
+              onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
           <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>
           <div className="pvt-braille-pattern">⠿</div>
-          <div className="pvt-attr-container">   
-            <div className="pvt-attr-text-container" data-tip={this.props.name}>{filtered} {this.props.name}
+          <div className="pvt-attr-container">
+            <div className={(this.props.isSelected === false) ? "pvt-attr-text-container-left" : "pvt-attr-text-container"}
+                 data-tip={this.props.name}>{filtered} {this.props.name}
             </div>
             <span
               className={(this.props.isSelected === false) ? "pvt-attr-close-hidden" : "pvt-attr-close-visible"}
@@ -537,6 +541,9 @@ class PivotTableUI extends React.PureComponent {
 
     const aggregatorCell = (
       <td className="pvtVals">
+        <Tooltip content={HelpConstants.SORT_ROWS} eventOn='onClick' tagName='span'>
+          <MaterialIcon icon="help_outline" className="pvtIconHelp"/>
+        </Tooltip>
         <a
           role="button"
           className="pvtRowOrder"
@@ -547,6 +554,9 @@ class PivotTableUI extends React.PureComponent {
          Sort rows {sortIcons[this.props.rowOrder].rowSymbol}
         </a>
         <br/>
+        <Tooltip content={HelpConstants.SORT_COLUMNS} eventOn='onClick' tagName='span'>
+          <MaterialIcon icon="help_outline" className="pvtIconHelp"/>
+        </Tooltip>
         <a
           role="button"
           className="pvtColOrder"

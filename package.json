@@ -72,6 +72,7 @@
     "webpack-dev-server": "^2.9.3"
   },
   "files": [
+    "HelpConstants.js",
     "PivotTable.js",
     "PivotTableUI.js",
     "PlotlyRenderers.js",
@@ -105,6 +106,7 @@
   "scripts": {
     "clean": "rm -rf __tests__ PivotTable.js* PivotTableUI.js* PlotlyRenderers.js* TableRenderers.js* Utilities.js* pivottable.css",
     "deploy": "webpack -p && mv bundle.js examples && cd examples && git init && git add . && git commit -m build && git push --force git@github.com:plotly/react-pivottable.git master:gh-pages && rm -rf .git bundle.js",
+    "build": "npm run clean && cp src/pivottable.css . && babel src --out-dir=. --source-maps --presets=env,react --plugins babel-plugin-add-module-exports",
     "doPublish": "npm run clean && cp src/pivottable.css . && babel src --out-dir=. --source-maps --presets=env,react --plugins babel-plugin-add-module-exports && npm publish",
     "postpublish": "npm run clean",
     "start": "webpack-dev-server",

@@ -417,6 +417,11 @@ table.pvtTable tbody tr td {
     font-size: 12px;
 }
 
+.pvtIconHelp {
+    font-size: 12px;
+    cursor: help;
+}
+
 .pvt-output-title {
     padding-top: 10px;
     padding-bottom: 5px;
@@ -439,6 +444,17 @@ table.pvtTable tbody tr td {
     text-overflow: ellipsis;
     margin-top: 2px;
     margin-bottom: -2px;
+}
+
+.pvt-attr-text-container-left {
+    width: 140px;
+    display: inline-block;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    margin-bottom: -2px;
+    margin-right: 12px;
 }
 
 .pvt-attr-text {

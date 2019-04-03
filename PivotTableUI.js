@@ -53,9 +53,15 @@ var _reactMaterialIcon = require('@material/react-material-icon');
 
 var _reactMaterialIcon2 = _interopRequireDefault(_reactMaterialIcon);
 
+var _HelpConstants = require('./HelpConstants');
+
+var HelpConstants = _interopRequireWildcard(_HelpConstants);
+
 require('@material/react-checkbox/dist/checkbox.css');
 
 require('@material/react-material-icon/dist/material-icon.css');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -260,6 +266,7 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
       var _this3 = this;
 
       var chevronClass = this.state.open === false ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up";
+      chevronClass += this.props.isSelected === false ? " pvt-attr-close-hidden" : " pvt-attr-close-visible";
       var filtered = Object.keys(this.props.valueFilter).length !== 0 ? _react2.default.createElement(
         'span',
         { className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle" },
@@ -270,7 +277,8 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
         { 'data-id': this.props.name },
         _react2.default.createElement(
           'span',
-          { className: 'pvtAttr', onDrag: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this), onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
+          { className: 'pvtAttr', onDrag: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this),
+            onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
           _react2.default.createElement(
             _reactTooltipLite2.default,
             { content: this.props.name, hoverDelay: 200, useHover: this.state.showTooltip },
@@ -284,7 +292,8 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
               { className: 'pvt-attr-container' },
               _react2.default.createElement(
                 'div',
-                { className: 'pvt-attr-text-container', 'data-tip': this.props.name },
+                { className: this.props.isSelected === false ? "pvt-attr-text-container-left" : "pvt-attr-text-container",
+                  'data-tip': this.props.name },
                 filtered,
                 ' ',
                 this.props.name
@@ -732,6 +741,11 @@ var PivotTableUI = function (_React$PureComponent2) {
         'td',
         { className: 'pvtVals' },
         _react2.default.createElement(
+          _reactTooltipLite2.default,
+          { content: HelpConstants.SORT_ROWS, eventOn: 'onClick', tagName: 'span' },
+          _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'help_outline', className: 'pvtIconHelp' })
+        ),
+        _react2.default.createElement(
           'a',
           {
             role: 'button',
@@ -744,6 +758,11 @@ var PivotTableUI = function (_React$PureComponent2) {
           sortIcons[this.props.rowOrder].rowSymbol
         ),
         _react2.default.createElement('br', null),
+        _react2.default.createElement(
+          _reactTooltipLite2.default,
+          { content: HelpConstants.SORT_COLUMNS, eventOn: 'onClick', tagName: 'span' },
+          _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'help_outline', className: 'pvtIconHelp' })
+        ),
         _react2.default.createElement(
           'a',
           {
