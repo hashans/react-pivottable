@@ -168,6 +168,7 @@ export class DraggableAttribute extends React.Component {
     this.setState({ showTooltip: true});
   }
 
+
   render() {
     let chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up"
     chevronClass += (this.props.isSelected === false) ? " pvt-attr-close-hidden" : " pvt-attr-close-visible";
@@ -176,6 +177,9 @@ export class DraggableAttribute extends React.Component {
         ?  (<span className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}>
           <MaterialIcon icon="filter_list" className="pvtIcon"/></span>)
         : (<span></span>);
+    /*if(!this.props.isSelected) {
+      this.props.clearFilters(this.props.name);
+    }*/
     return (
       <li data-id={this.props.name}>
         <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
@@ -189,10 +193,19 @@ export class DraggableAttribute extends React.Component {
             <span
               className={(this.props.isSelected === false) ? "pvt-attr-close-hidden" : "pvt-attr-close-visible"}
               onClick={ ()=> {
+
                 if (this.props.cols.indexOf(this.props.name) !== -1) {
-                  this.props.onUpdateProperties({cols: {$set: this.props.cols.filter( (item) => { return item !== this.props.name})}})
+                  this.props.onUpdateProperties(
+                    {
+                      cols: {$set: this.props.cols.filter( (item) => { return item !== this.props.name})}
+                    }
+                    );
                 } else if (this.props.rows.indexOf(this.props.name) !== -1) {
-                  this.props.onUpdateProperties({rows: {$set: this.props.rows.filter( (item) => { return item !== this.props.name})}})
+                  this.props.onUpdateProperties(
+                    {
+                      rows: {$set: this.props.rows.filter( (item) => { return item !== this.props.name})}
+                    }
+                    );
                 }
               }}
             >
@@ -217,6 +230,7 @@ DraggableAttribute.propTypes = {
   name: PropTypes.string.isRequired,
   addValuesToFilter: PropTypes.func.isRequired,
   removeValuesFromFilter: PropTypes.func.isRequired,
+  clearFilters: PropTypes.func.isRequired,
   attrValues: PropTypes.objectOf(PropTypes.number).isRequired,
   valueFilter: PropTypes.objectOf(PropTypes.bool),
   moveFilterBoxToTop: PropTypes.func.isRequired,
@@ -373,8 +387,15 @@ class PivotTableUI extends React.PureComponent {
   }
 
   removeValuesFromFilter(attribute, values) {
+      this.sendPropUpdate({
+        valueFilter: {[attribute]: {$unset: values}},
+      });
+
+  }
+
+  clearFilters(attribute) {
     this.sendPropUpdate({
-      valueFilter: {[attribute]: {$unset: values}},
+      valueFilter: {[attribute]: {}},
     });
   }
 
@@ -413,6 +434,7 @@ class PivotTableUI extends React.PureComponent {
               addValuesToFilter={this.addValuesToFilter.bind(this)}
               moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
               removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
+              clearFilters={this.clearFilters.bind(this)}
               zIndex={this.state.zIndices[x] || this.state.maxZIndex}
               isSelected={selectedList.includes(x)}
               cols={this.props.cols}
@@ -466,6 +488,7 @@ class PivotTableUI extends React.PureComponent {
             addValuesToFilter={this.addValuesToFilter.bind(this)}
             moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
             removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
+            clearFilters={this.clearFilters.bind(this)}
             zIndex={this.state.zIndices[x] || this.state.maxZIndex}
             isSelected={selectedList.includes(x)}
             cols={this.props.cols}

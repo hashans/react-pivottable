@@ -17,12 +17,9 @@ var SORT_COLUMNS = exports.SORT_COLUMNS = _react2.default.createElement(
   _react2.default.createElement(
     'p',
     null,
-    'Sort columns (along x axis) in order of size of cohort population.'
-  ),
-  _react2.default.createElement(
-    'p',
-    null,
-    'The arrow points in the direction of the sort (right arrow -> ascending)'
+    'Sort columns (along x axis) in order of size of cohort population. ',
+    _react2.default.createElement('br', null),
+    'The arrow points in the direction of the sort (right arrow \u2192 ascending)'
   )
 );
 var SORT_ROWS = exports.SORT_ROWS = _react2.default.createElement(
@@ -31,12 +28,9 @@ var SORT_ROWS = exports.SORT_ROWS = _react2.default.createElement(
   _react2.default.createElement(
     'p',
     null,
-    'Sort rows (along y axis) in order of size of cohort population.'
-  ),
-  _react2.default.createElement(
-    'p',
-    null,
-    'The arrow points in the direction of the sort (down arrow -> ascending)'
+    'Sort rows (along y axis) in order of size of cohort population. ',
+    _react2.default.createElement('br', null),
+    'The arrow points in the direction of the sort (down arrow \u2193 ascending)'
   )
 );;
 //# sourceMappingURL=HelpConstants.js.map

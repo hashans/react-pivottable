@@ -272,6 +272,9 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
         { className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle" },
         _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'filter_list', className: 'pvtIcon' })
       ) : _react2.default.createElement('span', null);
+      /*if(!this.props.isSelected) {
+        this.props.clearFilters(this.props.name);
+      }*/
       return _react2.default.createElement(
         'li',
         { 'data-id': this.props.name },
@@ -303,14 +306,19 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
                 {
                   className: this.props.isSelected === false ? "pvt-attr-close-hidden" : "pvt-attr-close-visible",
                   onClick: function onClick() {
+
                     if (_this3.props.cols.indexOf(_this3.props.name) !== -1) {
-                      _this3.props.onUpdateProperties({ cols: { $set: _this3.props.cols.filter(function (item) {
+                      _this3.props.onUpdateProperties({
+                        cols: { $set: _this3.props.cols.filter(function (item) {
                             return item !== _this3.props.name;
-                          }) } });
+                          }) }
+                      });
                     } else if (_this3.props.rows.indexOf(_this3.props.name) !== -1) {
-                      _this3.props.onUpdateProperties({ rows: { $set: _this3.props.rows.filter(function (item) {
+                      _this3.props.onUpdateProperties({
+                        rows: { $set: _this3.props.rows.filter(function (item) {
                             return item !== _this3.props.name;
-                          }) } });
+                          }) }
+                      });
                     }
                   }
                 },
@@ -341,6 +349,7 @@ DraggableAttribute.propTypes = {
   name: _propTypes2.default.string.isRequired,
   addValuesToFilter: _propTypes2.default.func.isRequired,
   removeValuesFromFilter: _propTypes2.default.func.isRequired,
+  clearFilters: _propTypes2.default.func.isRequired,
   attrValues: _propTypes2.default.objectOf(_propTypes2.default.number).isRequired,
   valueFilter: _propTypes2.default.objectOf(_propTypes2.default.bool),
   moveFilterBoxToTop: _propTypes2.default.func.isRequired,
@@ -561,6 +570,13 @@ var PivotTableUI = function (_React$PureComponent2) {
       });
     }
   }, {
+    key: 'clearFilters',
+    value: function clearFilters(attribute) {
+      this.sendPropUpdate({
+        valueFilter: _defineProperty({}, attribute, {})
+      });
+    }
+  }, {
     key: 'moveFilterBoxToTop',
     value: function moveFilterBoxToTop(attribute) {
       this.setState((0, _immutabilityHelper2.default)(this.state, {
@@ -602,6 +618,7 @@ var PivotTableUI = function (_React$PureComponent2) {
                 addValuesToFilter: _this8.addValuesToFilter.bind(_this8),
                 moveFilterBoxToTop: _this8.moveFilterBoxToTop.bind(_this8),
                 removeValuesFromFilter: _this8.removeValuesFromFilter.bind(_this8),
+                clearFilters: _this8.clearFilters.bind(_this8),
                 zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
                 isSelected: selectedList.includes(x),
                 cols: _this8.props.cols,
@@ -663,6 +680,7 @@ var PivotTableUI = function (_React$PureComponent2) {
             addValuesToFilter: _this8.addValuesToFilter.bind(_this8),
             moveFilterBoxToTop: _this8.moveFilterBoxToTop.bind(_this8),
             removeValuesFromFilter: _this8.removeValuesFromFilter.bind(_this8),
+            clearFilters: _this8.clearFilters.bind(_this8),
             zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
             isSelected: selectedList.includes(x),
             cols: _this8.props.cols,
