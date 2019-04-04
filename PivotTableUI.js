@@ -91,9 +91,6 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
   _createClass(DraggableAttribute, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps, nextContext) {
-      if (this.props.name === "Race") {
-        console.log(this.props.valueFilter);
-      }
       if (Object.keys(this.props.valueFilter).length > 0 && !nextProps.isSelected) {
         this.props.removeValuesFromFilter(this.props.name, Object.keys(this.props.valueFilter));
       }
