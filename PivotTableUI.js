@@ -89,6 +89,16 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
   }
 
   _createClass(DraggableAttribute, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps, nextContext) {
+      if (this.props.name === "Race") {
+        console.log(this.props.valueFilter);
+      }
+      if (Object.keys(this.props.valueFilter).length > 0 && !nextProps.isSelected) {
+        this.props.removeValuesFromFilter(this.props.name, Object.keys(this.props.valueFilter));
+      }
+    }
+  }, {
     key: 'toggleValue',
     value: function toggleValue(value) {
       if (value in this.props.valueFilter) {
@@ -272,9 +282,6 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
         { className: this.props.isSelected === false ? "pvtTriangleHide" : "pvtTriangle" },
         _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'filter_list', className: 'pvtIcon' })
       ) : _react2.default.createElement('span', null);
-      /*if(!this.props.isSelected) {
-        this.props.clearFilters(this.props.name);
-      }*/
       return _react2.default.createElement(
         'li',
         { 'data-id': this.props.name },
@@ -573,7 +580,7 @@ var PivotTableUI = function (_React$PureComponent2) {
     key: 'clearFilters',
     value: function clearFilters(attribute) {
       this.sendPropUpdate({
-        valueFilter: _defineProperty({}, attribute, {})
+        valueFilter: _defineProperty({}, attribute, { 0: 0 })
       });
     }
   }, {

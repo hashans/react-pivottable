@@ -23,6 +23,11 @@ export class DraggableAttribute extends React.Component {
     super(props);
     this.state = {open: false, filterText: '', showTooltip : false};
   }
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(Object.keys(this.props.valueFilter).length > 0 && !nextProps.isSelected) {
+      this.props.removeValuesFromFilter(this.props.name, Object.keys(this.props.valueFilter));
+    }
+  }
 
   toggleValue(value) {
     if (value in this.props.valueFilter) {
@@ -177,9 +182,6 @@ export class DraggableAttribute extends React.Component {
         ?  (<span className= {(this.props.isSelected === false) ? "pvtTriangleHide" : "pvtTriangle"}>
           <MaterialIcon icon="filter_list" className="pvtIcon"/></span>)
         : (<span></span>);
-    /*if(!this.props.isSelected) {
-      this.props.clearFilters(this.props.name);
-    }*/
     return (
       <li data-id={this.props.name}>
         <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
@@ -395,7 +397,7 @@ class PivotTableUI extends React.PureComponent {
 
   clearFilters(attribute) {
     this.sendPropUpdate({
-      valueFilter: {[attribute]: {}},
+      valueFilter: {[attribute]: {0 : 0}},
     });
   }
 
