@@ -20,18 +20,20 @@
 }
 
 table.pvtTable {
-    font-size: 8pt;
+    font-size: 10pt;
     text-align: left;
     border-collapse: collapse;
     margin-top: 3px;
     margin-left: 3px;
-    font-family: Verdana;
+    display: block;
+    overflow-y: scroll;
+    height: 65vh;
 }
 table.pvtTable thead tr th,
 table.pvtTable tbody tr th {
     background-color: #ebf0f8;
     border: 1px solid #c8d4e3;
-    font-size: 8pt;
+    font-size: 10pt;
     padding: 5px;
 }
 
@@ -389,8 +391,9 @@ table.pvtTable tbody tr td {
 
 .pvtCollapsible {
     min-height: 400px;
-    max-height: 600px;
+    max-height: 65vh;
     overflow: overlay;
+    margin-right: 8px;
     /* overflow: scroll; */
 }
 

@@ -825,11 +825,6 @@ var PivotTableUI = function (_React$PureComponent2) {
       var outputCell = _react2.default.createElement(
         'td',
         { className: 'pvtOutput' },
-        _react2.default.createElement(
-          'div',
-          { className: 'pvt-output-title' },
-          this.props.rendererName
-        ),
         _react2.default.createElement(_PivotTable2.default, (0, _immutabilityHelper2.default)(this.props, {
           data: { $set: this.materializedInput }
         }))

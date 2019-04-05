@@ -640,7 +640,6 @@ class PivotTableUI extends React.PureComponent {
     );
     const outputCell = (
       <td className="pvtOutput">
-        <div className="pvt-output-title">{this.props.rendererName}</div>
         <PivotTable
           {...update(this.props, {
             data: {$set: this.materializedInput},
