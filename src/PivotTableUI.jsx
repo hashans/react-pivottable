@@ -6,7 +6,7 @@ import PivotTable from './PivotTable';
 import Sortable from 'react-sortablejs';
 import Draggable from 'react-draggable';
 import Collapsible from 'react-collapsible';
-import SearchFilterUI from "./SearchFilterView";
+import SearchFilter from "./SearchFilterView";
 import Tooltip from 'react-tooltip-lite';
 import Checkbox from '@material/react-checkbox';
 import MaterialIcon from '@material/react-material-icon';
@@ -286,7 +286,7 @@ export class Dropdown extends React.PureComponent {
           </div>
         )}
         <br/>
-        <SearchFilterUI onSearchChange={s => {
+        <SearchFilter onSearchChange={s => {
           this.onSearchChange(s)
         }}/>
       </div>

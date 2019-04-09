@@ -61,11 +61,22 @@ table.pvtTable tbody tr td {
 
 .pvtAxisContainer,
 .pvtVals {
-    border: 1px solid #a2b1c6;
-    background: #f2f5fa;
-    padding: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    padding: 5px 5px 12px 5px;
     min-width: 20px;
     min-height: 20px;
+}
+
+.pvtVals {
+    text-align: left;
+    width: 240px;
+}
+
+.pvtUnused {
+    border-width: 1px 0 0 0;
+    border-style: solid none none none;
+    border-color: #dddddd white white white;
 }
 
 .pvtRenderers {
@@ -124,14 +135,6 @@ table.pvtTable tbody tr td {
     background: #ebf0f8;
 }
 
-.pvtVals {
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: top;
-    padding-bottom: 12px;
-    width: 240px;
-}
-
 .pvtRows {
     height: 35px;
     width: 240px;
@@ -176,6 +179,15 @@ table.pvtTable tbody tr td {
     -ms-user-select: none;
     cursor: -webkit-grab;
     cursor: grab;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+    background-color: #f1f2f6;
+    border-radius: 0px;
+    display: inline-block;
 }
 
 .pvtAxisContainer li span.pvtAttr:active {
@@ -224,6 +236,10 @@ table.pvtTable tbody tr td {
 }
 .pvtVertList {
     vertical-align: top;
+}
+
+table.pvtTable thead tr th, table.pvtTable tbody tr th {
+    background-color: #f1f2f6;
 }
 
 .pvtFilteredAttribute {
@@ -527,4 +543,100 @@ table.pvtTable tbody tr td {
     transform: rotate(180deg);
     float: right;
     color: #a2b1c6;
+}
+
+.close-icon {
+    border:1px solid transparent;
+    background-color: transparent;
+    display: none;
+    vertical-align: middle;
+    outline: 0;
+    cursor: pointer;
+    position: absolute;
+}
+.close-icon:after {
+    content: "X";
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-color: #999999;
+    z-index:1;
+    left: 185px;
+    top: 0;
+    bottom: 28px;
+    margin: auto;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    font-weight: normal;
+    font-size: 12px;
+    box-shadow: 0 0 2px #dddddd;
+    cursor: pointer;
+}
+.close-icon-show {
+    display: inline-block;
+}
+
+.attrListOpen {
+    background-color: white;
+    text-align: center;
+    cursor: pointer;
+    margin: 3px;
+    padding: 3px 0px 3px 0px;
+    border: solid 1px #dddddd;
+}
+
+.attrListClosed {
+    background-color: #EBF0F8;
+    color: #010101;
+    cursor: pointer;
+    margin: 3px;
+    text-align: center;
+    padding: 3px 0px 3px 0px;
+    border: solid 1px #dddddd;
+}
+
+.attrHeaderClosed {
+    display: block;
+    font-weight: 400;
+    text-decoration: none;
+    color: #2a3f5f;
+    position: relative;
+    padding: 5px;
+}
+
+.attrHeaderClosed:before {
+    font-family: "Material Icons";
+    content: '\0276F';
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    display: block;
+    transition: transform 300ms;
+    font-weight: 600;
+}
+
+.attrHeaderOpen {
+    display: block;
+    font-weight: 400;
+    text-decoration: none;
+    color: #2a3f5f;
+    position: relative;
+    padding: 5px;
+    background: white;
+}
+
+.attrHeaderOpen:after {
+    font-family: "Material Icons";
+    content: '\0276F';
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    display: block;
+    transition: transform 300ms;
+    font-weight: 600;
+}
+.attrHeaderOpen.is-open:after {
+    transform: rotateZ(90deg);
 }
