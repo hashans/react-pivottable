@@ -60,7 +60,6 @@ export class DraggableAttribute extends React.Component {
     const shown = values
       .filter(this.matchesFilter.bind(this))
       .sort(this.props.sorter);
-
     return (
       <Draggable handle=".pvtDragHandle">
         <div
@@ -175,7 +174,7 @@ export class DraggableAttribute extends React.Component {
 
 
   render() {
-    let chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up"
+    let chevronClass = (this.state.open === false) ? "pvt-attr-chevron-down" : "pvt-attr-chevron-up";
     chevronClass += (this.props.isSelected === false) ? " pvt-attr-close-hidden" : " pvt-attr-close-visible";
     const filtered =
       Object.keys(this.props.valueFilter).length !== 0
@@ -184,7 +183,8 @@ export class DraggableAttribute extends React.Component {
         : (<span></span>);
     return (
       <li data-id={this.props.name}>
-        <span className={'pvtAttr'} onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
+        <span className={this.props.searchMatched ? "pvtAttr pvtSearchFoundAttr" : "pvtAttr"}
+              onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
               onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
           <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>
           <div className="pvt-braille-pattern">⠿</div>
@@ -226,6 +226,7 @@ export class DraggableAttribute extends React.Component {
 
 DraggableAttribute.defaultProps = {
   valueFilter: {},
+  searchMatched: false
 };
 
 DraggableAttribute.propTypes = {
@@ -237,6 +238,7 @@ DraggableAttribute.propTypes = {
   valueFilter: PropTypes.objectOf(PropTypes.bool),
   moveFilterBoxToTop: PropTypes.func.isRequired,
   sorter: PropTypes.func.isRequired,
+  searchMatched: PropTypes.objectOf(PropTypes.bool),
   menuLimit: PropTypes.number,
   zIndex: PropTypes.number,
 };
@@ -439,20 +441,25 @@ class PivotTableUI extends React.PureComponent {
               clearFilters={this.clearFilters.bind(this)}
               zIndex={this.state.zIndices[x] || this.state.maxZIndex}
               isSelected={selectedList.includes(x)}
+              searchMatched={this.props.searchFoundAttrs.includes(x)}
               cols={this.props.cols}
               rows={this.props.rows}
               onUpdateProperties={ (s) => this.sendPropUpdate(s)}
             />);
           }
         });
-        let open = category.toLowerCase() === 'demographics' ? true : false;
+        let open = Object.keys(categories)[0] === category ? true : false;
+        let closedClass = this.props.searchFoundCats.includes(category)
+          ? 'attrListClosed pvtSearchFoundCat' : 'attrListClosed';
+        let openedClass = this.props.searchFoundCats.includes(category)
+          ? 'attrListOpen pvtSearchFoundCat' : 'attrListOpen';
         collapsibles.push(
           <Collapsible
             trigger={category}
             open={open}
             //overflowWhenOpen="hidden" //Aji updated
-            className="attrListClosed"
-            openedClassName="attrListOpen"
+            className={closedClass}
+            openedClassName={openedClass}
             triggerClassName="attrHeaderClosed"
             triggerOpenedClassName="attrHeaderOpen"
           >
@@ -490,6 +497,7 @@ class PivotTableUI extends React.PureComponent {
             addValuesToFilter={this.addValuesToFilter.bind(this)}
             moveFilterBoxToTop={this.moveFilterBoxToTop.bind(this)}
             removeValuesFromFilter={this.removeValuesFromFilter.bind(this)}
+            searchMatched={this.props.searchFoundAttrs.includes(x)}
             clearFilters={this.clearFilters.bind(this)}
             zIndex={this.state.zIndices[x] || this.state.maxZIndex}
             isSelected={selectedList.includes(x)}
@@ -695,6 +703,8 @@ PivotTableUI.propTypes = Object.assign({}, PivotTable.propTypes, {
   hiddenFromDragDrop: PropTypes.arrayOf(PropTypes.string),
   unusedOrientationCutoff: PropTypes.number,
   menuLimit: PropTypes.number,
+  searchFoundAttrs: PropTypes.arrayOf(PropTypes.string),
+  searchFoundCats: PropTypes.arrayOf(PropTypes.string)
 });
 
 PivotTableUI.defaultProps = Object.assign({}, PivotTable.defaultProps, {
@@ -703,6 +713,8 @@ PivotTableUI.defaultProps = Object.assign({}, PivotTable.defaultProps, {
   hiddenFromDragDrop: [],
   unusedOrientationCutoff: 85,
   menuLimit: 500,
+  searchFoundAttrs: [],
+  searchFoundCats: []
 });
 
 export default PivotTableUI;

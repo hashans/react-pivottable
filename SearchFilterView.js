@@ -29,21 +29,12 @@ var SearchFilter = function (_React$PureComponent) {
     var _this = _possibleConstructorReturn(this, (SearchFilter.__proto__ || Object.getPrototypeOf(SearchFilter)).call(this, props));
 
     _this.state = {
-      pivotState: props,
       searchValue: ""
     };
     return _this;
   }
 
   _createClass(SearchFilter, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      this.setState({
-        pivotState: nextProps,
-        searchValue: ""
-      });
-    }
-  }, {
     key: 'onSearchChange',
     value: function onSearchChange(s) {
       var closeIcon = document.querySelector('.close-icon');

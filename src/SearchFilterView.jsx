@@ -5,17 +5,10 @@ class SearchFilter extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      pivotState: props,
       searchValue: ""
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      pivotState: nextProps,
-      searchValue: ""
-    });
-  }
 
   onSearchChange (s) {
     let closeIcon = document.querySelector('.close-icon');

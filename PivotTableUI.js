@@ -126,7 +126,6 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
 
       var values = Object.keys(this.props.attrValues);
       var shown = values.filter(this.matchesFilter.bind(this)).sort(this.props.sorter);
-
       return _react2.default.createElement(
         _reactDraggable2.default,
         { handle: '.pvtDragHandle' },
@@ -284,7 +283,8 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
         { 'data-id': this.props.name },
         _react2.default.createElement(
           'span',
-          { className: 'pvtAttr', onDrag: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this),
+          { className: this.props.searchMatched ? "pvtAttr pvtSearchFoundAttr" : "pvtAttr",
+            onDrag: this.hideTooltips.bind(this), onMouseOver: this.showTooltips.bind(this),
             onMouseLeave: this.hideTooltips.bind(this), onDrop: this.showTooltips.bind(this) },
           _react2.default.createElement(
             _reactTooltipLite2.default,
@@ -346,7 +346,8 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
 }(_react2.default.Component);
 
 DraggableAttribute.defaultProps = {
-  valueFilter: {}
+  valueFilter: {},
+  searchMatched: false
 };
 
 DraggableAttribute.propTypes = {
@@ -358,6 +359,7 @@ DraggableAttribute.propTypes = {
   valueFilter: _propTypes2.default.objectOf(_propTypes2.default.bool),
   moveFilterBoxToTop: _propTypes2.default.func.isRequired,
   sorter: _propTypes2.default.func.isRequired,
+  searchMatched: _propTypes2.default.objectOf(_propTypes2.default.bool),
   menuLimit: _propTypes2.default.number,
   zIndex: _propTypes2.default.number
 };
@@ -625,6 +627,7 @@ var PivotTableUI = function (_React$PureComponent2) {
                 clearFilters: _this8.clearFilters.bind(_this8),
                 zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
                 isSelected: selectedList.includes(x),
+                searchMatched: _this8.props.searchFoundAttrs.includes(x),
                 cols: _this8.props.cols,
                 rows: _this8.props.rows,
                 onUpdateProperties: function onUpdateProperties(s) {
@@ -633,15 +636,17 @@ var PivotTableUI = function (_React$PureComponent2) {
               }));
             }
           });
-          var open = category.toLowerCase() === 'demographics' ? true : false;
+          var open = Object.keys(categories)[0] === category ? true : false;
+          var closedClass = _this8.props.searchFoundCats.includes(category) ? 'attrListClosed pvtSearchFoundCat' : 'attrListClosed';
+          var openedClass = _this8.props.searchFoundCats.includes(category) ? 'attrListOpen pvtSearchFoundCat' : 'attrListOpen';
           collapsibles.push(_react2.default.createElement(
             _reactCollapsible2.default,
             {
               trigger: category,
               open: open
               //overflowWhenOpen="hidden" //Aji updated
-              , className: 'attrListClosed',
-              openedClassName: 'attrListOpen',
+              , className: closedClass,
+              openedClassName: openedClass,
               triggerClassName: 'attrHeaderClosed',
               triggerOpenedClassName: 'attrHeaderOpen'
             },
@@ -684,6 +689,7 @@ var PivotTableUI = function (_React$PureComponent2) {
             addValuesToFilter: _this8.addValuesToFilter.bind(_this8),
             moveFilterBoxToTop: _this8.moveFilterBoxToTop.bind(_this8),
             removeValuesFromFilter: _this8.removeValuesFromFilter.bind(_this8),
+            searchMatched: _this8.props.searchFoundAttrs.includes(x),
             clearFilters: _this8.clearFilters.bind(_this8),
             zIndex: _this8.state.zIndices[x] || _this8.state.maxZIndex,
             isSelected: selectedList.includes(x),
@@ -897,7 +903,9 @@ PivotTableUI.propTypes = Object.assign({}, _PivotTable2.default.propTypes, {
   hiddenFromAggregators: _propTypes2.default.arrayOf(_propTypes2.default.string),
   hiddenFromDragDrop: _propTypes2.default.arrayOf(_propTypes2.default.string),
   unusedOrientationCutoff: _propTypes2.default.number,
-  menuLimit: _propTypes2.default.number
+  menuLimit: _propTypes2.default.number,
+  searchFoundAttrs: _propTypes2.default.arrayOf(_propTypes2.default.string),
+  searchFoundCats: _propTypes2.default.arrayOf(_propTypes2.default.string)
 });
 
 PivotTableUI.defaultProps = Object.assign({}, _PivotTable2.default.defaultProps, {
@@ -905,7 +913,9 @@ PivotTableUI.defaultProps = Object.assign({}, _PivotTable2.default.defaultProps,
   hiddenFromAggregators: [],
   hiddenFromDragDrop: [],
   unusedOrientationCutoff: 85,
-  menuLimit: 500
+  menuLimit: 500,
+  searchFoundAttrs: [],
+  searchFoundCats: []
 });
 
 exports.default = PivotTableUI;
