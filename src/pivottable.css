@@ -647,8 +647,8 @@ table.pvtTable thead tr th, table.pvtTable tbody tr th {
     transform: rotateZ(90deg);
 }
 .pvtSearchFoundAttr {
-    background-color: #a7ffeb !important;
+    background-color: #fff59d !important;
 }
 .pvtSearchFoundCat {
-    background-color: #84ffff !important;
+    background-color: #ffeb3b !important;
 }
