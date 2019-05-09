@@ -83,7 +83,7 @@ var SearchFilter = function (_React$PureComponent) {
             onChange: function onChange(s) {
               _this2.onSearchChange(s);
             } }),
-          _react2.default.createElement('button', { 'class': 'close-icon', type: 'reset',
+          _react2.default.createElement('button', { className: 'close-icon', type: 'reset',
             onClick: function onClick(s) {
               _this2.clearSearch(s);
               _this2.onSearchChange(s);

@@ -187,7 +187,9 @@ export class DraggableAttribute extends React.Component {
               onDrag={this.hideTooltips.bind(this)} onMouseOver={this.showTooltips.bind(this)}
               onMouseLeave={this.hideTooltips.bind(this)} onDrop={this.showTooltips.bind(this)}>
           <Tooltip content={this.props.name} hoverDelay={200} useHover={this.state.showTooltip}>
-          <div className="pvt-braille-pattern">⠿</div>
+          <div className="pvt-braille-pattern">
+            <MaterialIcon icon="drag_indicator" className="pvtIconDrag"/>
+          </div>
           <div className="pvt-attr-container">
             <div className={(this.props.isSelected === false) ? "pvt-attr-text-container-left" : "pvt-attr-text-container"}
                  data-tip={this.props.name}>{filtered} {this.props.name}
@@ -238,7 +240,7 @@ DraggableAttribute.propTypes = {
   valueFilter: PropTypes.objectOf(PropTypes.bool),
   moveFilterBoxToTop: PropTypes.func.isRequired,
   sorter: PropTypes.func.isRequired,
-  searchMatched: PropTypes.objectOf(PropTypes.bool),
+  searchMatched: PropTypes.bool,
   menuLimit: PropTypes.number,
   zIndex: PropTypes.number,
 };

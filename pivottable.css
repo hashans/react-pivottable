@@ -447,6 +447,11 @@ table.pvtTable thead tr th, table.pvtTable tbody tr th {
     cursor: help;
 }
 
+.pvtIconDrag {
+    font-size: 18px;
+    margin-top: 3px;
+}
+
 .pvt-output-title {
     padding-top: 10px;
     padding-bottom: 5px;

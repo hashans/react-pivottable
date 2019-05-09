@@ -292,7 +292,7 @@ var DraggableAttribute = exports.DraggableAttribute = function (_React$Component
             _react2.default.createElement(
               'div',
               { className: 'pvt-braille-pattern' },
-              '\u283F'
+              _react2.default.createElement(_reactMaterialIcon2.default, { icon: 'drag_indicator', className: 'pvtIconDrag' })
             ),
             _react2.default.createElement(
               'div',
@@ -359,7 +359,7 @@ DraggableAttribute.propTypes = {
   valueFilter: _propTypes2.default.objectOf(_propTypes2.default.bool),
   moveFilterBoxToTop: _propTypes2.default.func.isRequired,
   sorter: _propTypes2.default.func.isRequired,
-  searchMatched: _propTypes2.default.objectOf(_propTypes2.default.bool),
+  searchMatched: _propTypes2.default.bool,
   menuLimit: _propTypes2.default.number,
   zIndex: _propTypes2.default.number
 };

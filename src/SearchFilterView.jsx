@@ -53,7 +53,7 @@ class SearchFilter extends React.PureComponent {
               this.onSearchChange(s)
             }}>
           </input>
-          <button class="close-icon" type="reset"
+          <button className="close-icon" type="reset"
                   onClick={ s => {
                     this.clearSearch(s);
                     this.onSearchChange(s);
