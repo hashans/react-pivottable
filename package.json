@@ -1,43 +1,33 @@
 {
-  "_args": [
-    [
-      "react-pivottable@0.9.0",
-      "/Users/rdeshapriya/projects/proxi-hub"
-    ]
+  "name": "react-pivottable",
+  "version": "0.9.0",
+  "main": "PivotTableUI.js",
+  "description": "A React-based pivot table",
+  "homepage": "https://github.com/plotly/react-pivottable#readme",
+  "keywords": [
+    "react",
+    "pivottable"
   ],
-  "_from": "git+https://github.com/ramdesh/react-pivottable.git",
-  "_id": "react-pivottable@0.9.0",
-  "_inBundle": false,
-  "_integrity": "sha512-fs1pGV5z4BvOXL4iLu79kKCLgR5XINW2ZredJHoPqXEMbJaIv50Eoec1XowWf3i3Dvdb8EYgvNqlF2ggC4GJOw==",
-  "_location": "/react-pivottable",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "git",
-    "raw": "git+https://github.com/ramdesh/react-pivottable.git",
-    "rawSpec": "git+https://github.com/ramdesh/react-pivottable.git",
-    "saveSpec": "git+https://github.com/ramdesh/react-pivottable.git",
-    "fetchSpec": "https://github.com/ramdesh/react-pivottable.git",
-    "gitCommittish": null
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "git+https://github.com/ramdesh/react-pivottable.git#1843b70fdb8d7ac0fca16db9493c2a552943ba67",
-  "_spec": "git+https://github.com/ramdesh/react-pivottable.git",
-  "_where": "/Users/tsshiek/Desktop/proxi-hub",
+  "license": "MIT",
   "author": {
     "name": "Nicolas Kruchten",
     "email": "nicolas@kruchten.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plotly/react-pivottable.git"
+  },
   "bugs": {
     "url": "https://github.com/plotly/react-pivottable/issues"
   },
+  "deprecated": false,
   "bundleDependencies": false,
   "dependencies": {
     "@material/react-checkbox": "^0.11.0",
     "@material/react-material-icon": "^0.11.0",
     "immutability-helper": "^2.3.1",
     "prop-types": "^15.5.10",
+    "react-bootstrap": "^0.32.4",
     "react-collapsible": "^2.6.0",
     "react-draggable": "^3.0.3",
     "react-sortablejs": "^1.3.4",
@@ -45,8 +35,6 @@
     "react-tooltip-lite": "^1.9.1",
     "sortablejs": "^1.6.1"
   },
-  "deprecated": false,
-  "description": "A React-based pivot table",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.2.3",
@@ -87,21 +75,9 @@
     "Utilities.js.map",
     "pivottable.css"
   ],
-  "homepage": "https://github.com/plotly/react-pivottable#readme",
-  "keywords": [
-    "react",
-    "pivottable"
-  ],
-  "license": "MIT",
-  "main": "PivotTableUI.js",
-  "name": "react-pivottable",
   "peerDependencies": {
     "react": ">=15.0.0",
     "react-dom": ">=15.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/plotly/react-pivottable.git"
   },
   "scripts": {
     "clean": "rm -rf __tests__ PivotTable.js* PivotTableUI.js* PlotlyRenderers.js* TableRenderers.js* Utilities.js* pivottable.css",
@@ -116,6 +92,5 @@
     "test:jest": "jest",
     "test:prettier": "prettier -l \"src/*.js*\" && echo 'prettier: \\033[0;32m'PASS'\\033[0m'",
     "test:prettier:fix": "prettier  --write \"src/*.js*\""
-  },
-  "version": "0.9.0"
+  }
 }
